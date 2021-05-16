@@ -33,7 +33,7 @@ class EscPosHelper {
 	 */
 	public function getImageBytes($image, $printerResolution, $dither = 0.8)
 	{
-		if ( imagesx($image) > 576 )
+		if ( imagesx($image) > $printerResolution )
 			$image = ImagingHelper::image_resize($image, imagesx($image), imagesy($image), $printerResolution, NULL);
 
 
@@ -47,7 +47,7 @@ class EscPosHelper {
 		);
 
 		// convert the image to indexed color mode
-		$new_image = $converter->convertToIndexedColor($image, $palette, 0.8);
+		$new_image = $converter->convertToIndexedColor($image, $palette, $dither);
 
 		// save the new image
 		$tmp = tempnam(sys_get_temp_dir(), 'escpos-helper-dither');
