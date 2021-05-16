@@ -1,0 +1,30 @@
+{
+    "name" : "net-tools/escpos",
+	
+    "description" : "Composer library ESC/POS helper",
+	
+	"type": "library",
+	
+	"require" : {
+		"net-tools/gd-indexed-color-converter" : "^1.0.0",
+		"mike42/escpos-php"	: "^3.0.0",
+		"net-tools/core" : "^1.0.0"
+	},
+	
+	"autoload": {
+		"psr-4": {
+			"Nettools\\EscPos\\": "src/"
+		}
+    },
+	 
+    "license" : "MIT",
+
+    "authors": [
+        {
+            "name": "Pierre",
+            "email": "dev@nettools.ovh",
+            "role": "Developer"
+        }
+    ]
+
+}
