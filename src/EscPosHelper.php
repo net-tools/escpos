@@ -31,7 +31,7 @@ class EscPosHelper {
 	 * @param float $dither Quantity of dither for black/white conversion
 	 * @return string Return a string to be sent to printer
 	 */
-	public function getImageBytes($image, $printerResolution, $dither = 0.8)
+	public static function getImageBytes($image, $printerResolution, $dither = 0.8)
 	{
 		if ( imagesx($image) > $printerResolution )
 			$image = ImagingHelper::image_resize($image, imagesx($image), imagesy($image), $printerResolution, NULL);
