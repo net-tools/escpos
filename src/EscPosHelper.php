@@ -66,7 +66,7 @@ class EscPosHelper {
 			}
 			finally
 			{
-				$connector->finalize();
+				$printer->close();
 			}
 		}
 		finally
