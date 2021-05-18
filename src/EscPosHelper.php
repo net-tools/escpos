@@ -264,7 +264,7 @@ class EscPosHelper {
 				if ( $useGraphics )
 					$printer->graphics($img);				
 				else
-					$printer->bitImage($img);
+					$printer->bitImageColumnFormat($img);
 				
 				// get data from connector				
 				return $connector->getData();
