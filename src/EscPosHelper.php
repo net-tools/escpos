@@ -222,7 +222,7 @@ class EscPosHelper {
 	 * @param resource $image
 	 * @param int $printerResolution X-resolution of printer
 	 * @param float $dither Quantity of dither for black/white conversion
-	 * @param bool $useGraphics Use GS(k graphics commands (unsuitable for printers with poor ESC/POS compatibility) ; if false, GSv0 commands will be used (raster bit image)
+	 * @param bool $useGraphics Use GS(k graphics commands (unsuitable for printers with poor ESC/POS compatibility) ; if false, ESC * commands will be used (bit image)
 	 * @return string Return a string to be sent to printer
 	 */
 	public static function getImageBytes($image, $printerResolution, $dither = 0.8, $useGraphics = false)
