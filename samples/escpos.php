@@ -19,12 +19,7 @@ use Mike42\Escpos\CapabilityProfile;
 
 function output($escpos)
 {
-	$f = fopen(__DIR__ . '/escpos.prn', 'w');
-	fwrite($f, $escpos);
-	fclose($f);
-	
 	$html = "<a href=\"rawbt:base64," . base64_encode($escpos) . "\">Send to ESC/POS printer</a><br>";
-	$html .= "<a download href=\"escpos.prn\">Download ESC/POS raw data</a>";
 	
 	echo $html;
 }
