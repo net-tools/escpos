@@ -35,6 +35,17 @@ function output($escpos)
 <body>
 <?php
 	
+	
+	
+// ****** UPDATE THIS LINE WITH APPROPRIATE DRIVER *****
+$driver = new \Nettools\EscPos\Drivers\Epson_TM_P80();
+// ****** UPDATE THIS LINE WITH APPROPRIATE DRIVER *****
+
+
+// create helper object	
+$escpos_helper = new \Nettools\EscPos\EscPosHelper($driver);
+	
+	
 try
 {
 	if ( $f = $_FILES['image'] )
@@ -176,7 +187,7 @@ try
 	// output a barcode
 	else if ( isset($_REQUEST['barcode']) )
 	{
-		$escpos = \Nettools\EscPos\EscPosHelper::barcode($_REQUEST['value'], (int)$_REQUEST['barcode']);
+		$escpos = $escpos_helper->barcode($_REQUEST['value'], (int)$_REQUEST['barcode']);
 
 		// output
 		output($escpos);
@@ -185,10 +196,10 @@ try
 
 
 
-	// output a barcode
+	// output a qrcode
 	else if ( isset($_REQUEST['qrcode']) )
 	{
-		$escpos = \Nettools\EscPos\EscPosHelper::qrcode($_REQUEST['qrcode']);
+		$escpos = $escpos_helper->qrcode($_REQUEST['qrcode'], (int)($_REQUEST['version']), (int)($_REQUEST['size']), (int)($_REQUEST['ec']));
 
 		// output
 		output($escpos);
@@ -252,6 +263,9 @@ catch (Throwable $e)
 	
 	
 <form method="post" action="escpos.php">
-	<input type="text" name="qrcode">
+	<label>Value :<input type="text" name="qrcode"></label><br>
+	<label>Version/model :<input type="text" name="version"></label><br>
+	<label>Size : <input type="text" name="size" value="3"></label><br>
+	<label>Error correction : <input type="text" name="ec" value="1" placeholder="1 (hoin) or 48-51 (Epson)"></label><br>
 	<input type="submit" name="submit" value="Print qrcode">
 </form>

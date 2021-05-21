@@ -13,7 +13,9 @@ namespace Nettools\EscPos;
 
 
 
-use Nettools\Core\Helpers\ImagingHelper;
+use \Nettools\Core\Helpers\ImagingHelper;
+use \Nettools\EscPos\BarcodeFormatException;
+use \Nettools\EscPos\Drivers\Driver;
 
 
 
@@ -22,8 +24,7 @@ use Nettools\Core\Helpers\ImagingHelper;
  * Helper class to deal with escpos
  */
 class EscPosHelper {
-	
-	
+		
 	const BARCODE_UPCA = 65;
 	const BARCODE_UPCE = 66;
 	const BARCODE_EAN13 = 67;
@@ -34,16 +35,146 @@ class EscPosHelper {
 	const BARCODE_CODE128 = 73;
 
 	
+	protected $driver;
+	
+	
+	
+	/**
+	 * Constructor
+	 * 
+	 * @param \Nettools\EscPos\Drivers\Driver $driver
+	 */
+	public function __construct(Driver $driver)
+	{	
+		$this->driver = $driver;
+	}
+	
+	
 	
 	/**
 	 * Print 2D barcode (qrcode)
 	 *
 	 * @param string $value Qrcode value
+	 * @param int $kind QR code kind 
+	 * @param int $size Module size (size of one small square in the qrcode)
+	 * @param int $ec Error correction level
+	 * @return string Returns ESC/POS string with 2D barcode output
 	 */
-	public static function qrcode($value)
+	function qrcode($value, $kind = NULL, $size = 3, $ec = NULL)
 	{
-		$l = strlen($value);
-		return "\eZ" . chr(1) . chr(1) . chr(2) . chr($l % 256) . chr((int)($l / 256)) . $value;
+		return $this->driver->qrcode($value, $kind, $size, $ec);
+	}
+	
+	
+	
+	/**
+	 * Print UPCA barcode
+	 *
+	 * @param string $value Barcode value
+	 * @return string Returns ESC/POS string with 1D barcode output
+	 * @throws \Nettools\EscPos\BarcodeFormatException Thrown if value format is wrong according to the barcode kind
+	 */
+	public function barcode_upca($value)
+	{
+		return $this->barcode($value, self::BARCODE_UPCA);
+	}
+	
+	
+	
+	/**
+	 * Print UPCE barcode
+	 *
+	 * @param string $value Barcode value
+	 * @return string Returns ESC/POS string with 1D barcode output
+	 * @throws \Nettools\EscPos\BarcodeFormatException Thrown if value format is wrong according to the barcode kind
+	 */
+	public function barcode_upce($value)
+	{
+		return $this->barcode($value, self::BARCODE_UPCE);
+	}
+	
+	
+	
+	/**
+	 * Print EAN13 barcode
+	 *
+	 * @param string $value Barcode value
+	 * @return string Returns ESC/POS string with 1D barcode output
+	 * @throws \Nettools\EscPos\BarcodeFormatException Thrown if value format is wrong according to the barcode kind
+	 */
+	public function barcode_ean13($value)
+	{
+		return $this->barcode($value, self::BARCODE_EAN13);
+	}
+	
+	
+	
+	/**
+	 * Print EAN8 barcode
+	 *
+	 * @param string $value Barcode value
+	 * @return string Returns ESC/POS string with 1D barcode output
+	 * @throws \Nettools\EscPos\BarcodeFormatException Thrown if value format is wrong according to the barcode kind
+	 */
+	public function barcode_ean8($value)
+	{
+		return $this->barcode($value, self::BARCODE_EAN8);
+	}
+	
+	
+	
+	/**
+	 * Print CODE39 barcode
+	 *
+	 * @param string $value Barcode value
+	 * @return string Returns ESC/POS string with 1D barcode output
+	 * @throws \Nettools\EscPos\BarcodeFormatException Thrown if value format is wrong according to the barcode kind
+	 */
+	public function barcode_code39($value)
+	{
+		return $this->barcode($value, self::BARCODE_CODE39);
+	}
+	
+	
+	
+	/**
+	 * Print CODABAR barcode
+	 *
+	 * @param string $value Barcode value
+	 * @return string Returns ESC/POS string with 1D barcode output
+	 * @throws \Nettools\EscPos\BarcodeFormatException Thrown if value format is wrong according to the barcode kind
+	 */
+	public function barcode_codabar($value)
+	{
+		return $this->barcode($value, self::BARCODE_CODABAR);
+	}
+	
+	
+	
+	/**
+	 * Print CODE93 barcode
+	 *
+	 * @param string $value Barcode value
+	 * @return string Returns ESC/POS string with 1D barcode output
+	 * @throws \Nettools\EscPos\BarcodeFormatException Thrown if value format is wrong according to the barcode kind
+	 */
+	public function barcode_code93($value)
+	{
+		return $this->barcode($value, self::BARCODE_CODE93);
+	}
+	
+	
+	
+	/**
+	 * Print CODE128 barcode
+	 *
+	 * @param string $value Barcode value
+	 * @return string Returns ESC/POS string with 1D barcode output
+	 * @throws \Nettools\EscPos\BarcodeFormatException Thrown if value format is wrong according to the barcode kind
+	 */
+	public function barcode_code128($value)
+	{
+		return $this->barcode($value, self::BARCODE_CODE128);
 	}
 	
 	
@@ -54,7 +185,7 @@ class EscPosHelper {
 	 * @param string $value Barcode value
 	 * @param int $barcode Barcode kind
 	 */
-	public static function barcode($value, $barcode)
+	public function barcode($value, $barcode)
 	{
 		switch ( $barcode )
 		{
@@ -105,113 +236,12 @@ class EscPosHelper {
 					throw new BarcodeFormatException('Barcode value format error');
 
 				break;
-				
-				
-			case self::BARCODE_CODE128 :
-				if ( !preg_match("/^\{[A-C][\\x00-\\x7F]+$/", $value) )
-					throw new BarcodeFormatException('Barcode value format error');
-		
-				break;			
 		}
 		
 		
-		return "\x1Dk" . chr($barcode) . chr(strlen($value)) . $value;
-	}
-	
-	
-	
-	/**
-	 * Print UPCA barcode
-	 *
-	 * @param string $value Barcode value
-	 */
-	public static function barcode_upca($value)
-	{
-		return self::barcode($value, self::BARCODE_UPCA);
-	}
-	
-	
-	
-	/**
-	 * Print UPCE barcode
-	 *
-	 * @param string $value Barcode value
-	 */
-	public static function barcode_upce($value)
-	{
-		return self::barcode($value, self::BARCODE_UPCE);
-	}
-	
-	
-	
-	/**
-	 * Print EAN13 barcode
-	 *
-	 * @param string $value Barcode value
-	 */
-	public static function barcode_ean13($value)
-	{
-		return self::barcode($value, self::BARCODE_EAN13);
-	}
-	
-	
-	
-	/**
-	 * Print EAN8 barcode
-	 *
-	 * @param string $value Barcode value
-	 */
-	public static function barcode_ean8($value)
-	{
-		return self::barcode($value, self::BARCODE_EAN8);
-	}
-	
-	
-	
-	/**
-	 * Print CODE39 barcode
-	 *
-	 * @param string $value Barcode value
-	 */
-	public static function barcode_code39($value)
-	{
-		return self::barcode($value, self::BARCODE_CODE39);
-	}
-	
-	
-	
-	/**
-	 * Print CODABAR barcode
-	 *
-	 * @param string $value Barcode value
-	 */
-	public static function barcode_codabar($value)
-	{
-		return self::barcode($value, self::BARCODE_CODABAR);
-	}
-	
-	
-	
-	/**
-	 * Print CODE93 barcode
-	 *
-	 * @param string $value Barcode value
-	 */
-	public static function barcode_code93($value)
-	{
-		return self::barcode($value, self::BARCODE_CODE93);
-	}
-	
-	
-	
-	/**
-	 * Print CODE128 barcode
-	 *
-	 * @param string $value Barcode value
-	 */
-	public static function barcode_code128($value)
-	{
-		return self::barcode($value, self::BARCODE_CODE128);
+		
+		// ask driver for suitable command 
+		return $this->driver->barcode($value, $barcode);
 	}
 	
 	
@@ -279,7 +309,6 @@ class EscPosHelper {
 			unlink($tmp);
 		}
 	}
-	
 }
 
 ?>
