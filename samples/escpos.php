@@ -39,6 +39,7 @@ function output($escpos)
 	
 // ****** UPDATE THIS LINE WITH APPROPRIATE DRIVER *****
 $driver = new \Nettools\EscPos\Drivers\Epson_TM_P80();
+//$driver = new \Nettools\EscPos\Drivers\Hoin_HOP_E300();
 // ****** UPDATE THIS LINE WITH APPROPRIATE DRIVER *****
 
 
@@ -79,7 +80,7 @@ try
 
 
 				// dither image to black & white
-				$escpos = \Nettools\EscPos\EscPosHelper::getImageBytes($image, 576, 0.75, is_int(strpos($_REQUEST['submit'], 'GS ( L')));
+				$escpos = $escpos_helper->image($image, 0.75);
 				output($escpos);
 			}
 			finally
@@ -220,9 +221,15 @@ catch (Throwable $e)
     die();
 }
 ?>
+	
+<p><em>Printer driver : <?php echo substr(strrchr(get_class($driver), '\\'),1); ?></em></p>
+
+	
+<hr>
+
 
 <form method="post" enctype="multipart/form-data" action="escpos.php">
-	<p><label>Image : <input type="file" accept="image/*" name="image"></label><input name="submit" type="submit" value="graphics GS ( L"> - <input name="submit" type="submit" value="GS v 0"></p>
+	<p><label>Image : <input type="file" accept="image/*" name="image"></label><input name="submit" type="submit"></p>
 </form>
 	
 	
@@ -245,6 +252,10 @@ catch (Throwable $e)
 	</select>
 	<input type="submit" value="Print this characters map">
 </form>
+
+	
+<hr>
+	
 	
 <form method="post" action="escpos.php">
 	<select name="barcode">
@@ -260,12 +271,15 @@ catch (Throwable $e)
 	<input type="text" name="value">
 	<input type="submit" name="submit" value="Print barcode">
 </form>
+
 	
+<hr>
+
 	
 <form method="post" action="escpos.php">
 	<label>Value :<input type="text" name="qrcode"></label><br>
-	<label>Version/model :<input type="text" name="version"></label><br>
+	<label>Version/model :<input type="text" name="version" placeholder="1-19 (Hoin) or 49-50 (Epson Model 1 or 2)"></label><br>
 	<label>Size : <input type="text" name="size" value="3"></label><br>
-	<label>Error correction : <input type="text" name="ec" value="1" placeholder="1 (hoin) or 48-51 (Epson)"></label><br>
+	<label>Error correction : <input type="text" name="ec" value="" placeholder="1-4 (Hoin) or 48-51 (Epson)"></label><br>
 	<input type="submit" name="submit" value="Print qrcode">
 </form>

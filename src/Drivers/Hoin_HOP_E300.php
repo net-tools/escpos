@@ -28,6 +28,19 @@ class Hoin_HOP_E300 extends EscPosCompliant {
 	
 	
 	
+	/** 
+	 * Do send job with appropriate escpos command, depending of printer driver capabilities
+	 *
+	 * @param \Mike42\Escpos\EscposImage $img Image object
+	 * @param \Mike42\Escpos\Printer $printer Printer object to send through
+	 */
+	function printImageWithMike42EscPosPrinter(\Mike42\Escpos\EscposImage $img, \Mike42\Escpos\Printer $printer)
+	{
+		$printer->bitImageColumnFormat($img);
+	}
+	
+	
+
 	/**
 	 * Print 2D barcode (qrcode)
 	 *

@@ -13,7 +13,6 @@ namespace Nettools\EscPos;
 
 
 
-use \Nettools\Core\Helpers\ImagingHelper;
 use \Nettools\EscPos\BarcodeFormatException;
 use \Nettools\EscPos\Drivers\Driver;
 
@@ -247,67 +246,15 @@ class EscPosHelper {
 	
 	
 	/**
-	 * Get data bytes for an image ready to be sent to ESCPOS printer
+	 * Get data bytes for an image to send to an ESCPOS printer
 	 *
 	 * @param resource $image
-	 * @param int $printerResolution X-resolution of printer
 	 * @param float $dither Quantity of dither for black/white conversion
-	 * @param bool $useGraphics Use GS(k graphics commands (unsuitable for printers with poor ESC/POS compatibility) ; if false, ESC * commands will be used (bit image)
 	 * @return string Return a string to be sent to printer
 	 */
-	public static function getImageBytes($image, $printerResolution, $dither = 0.8, $useGraphics = false)
+	public function image($image, $dither = 0.8)
 	{
-		if ( imagesx($image) > $printerResolution )
-			$image = ImagingHelper::image_resize($image, imagesx($image), imagesy($image), $printerResolution, NULL);
-
-
-		// create a gd indexed color converter
-		$converter = new \GDIndexedColorConverter();
-
-		// the color palette
-		$palette = array(
-			array(0, 0, 0),
-			array(255, 255, 255)
-		);
-
-		// convert the image to indexed color mode
-		$new_image = $converter->convertToIndexedColor($image, $palette, $dither);
-
-		// save the new image
-		$tmp = tempnam(sys_get_temp_dir(), 'escpos-helper-dither');
-		imagepng($new_image, $tmp, 0);
-
-		try
-		{
-			// create connector and printer
-			$connector = new \Mike42\Escpos\PrintConnectors\DummyPrintConnector();
-			$printer = new \Mike42\Escpos\Printer($connector);
-
-			
-			try
-			
-			{
-				// load image with escpos lib 
-				$img = \Mike42\Escpos\EscposImage::load($tmp, false);
-				
-				// render image with graphics new method or bitImage for larger compatibility
-				if ( $useGraphics )
-					$printer->graphics($img);				
-				else
-					$printer->bitImageColumnFormat($img);
-				
-				// get data from connector				
-				return $connector->getData();
-			}
-			finally
-			{
-				$printer->close();
-			}
-		}
-		finally
-		{
-			unlink($tmp);
-		}
+		return $this->driver->image($image, $dither);
 	}
 }
 

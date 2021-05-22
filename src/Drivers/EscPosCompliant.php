@@ -21,6 +21,62 @@ abstract class EscPosCompliant extends Driver {
 	
 	
 	/**
+	 * Get printer resolution (number of dots per line)
+	 *
+	 * @return int
+	 */
+	function getPrinterResolution()
+	{
+		return 576;
+	}
+	
+	
+	
+	/** 
+	 * Do send job with appropriate escpos command, depending of printer driver capabilities
+	 *
+	 * @param \Mike42\Escpos\EscposImage $img Image object
+	 * @param \Mike42\Escpos\Printer $printer Printer object to send through
+	 */
+	abstract function printImageWithMike42EscPosPrinter(\Mike42\Escpos\EscposImage $img, \Mike42\Escpos\Printer $printer);
+	
+	
+
+	/**
+	 * Get printer resolution (number of dots per line)
+	 *
+	 * @param string $file Filepath to image file (png)
+	 * @return string
+	 */
+	function getImageBytes($file)
+	{
+		// create connector and printer
+		$connector = new \Mike42\Escpos\PrintConnectors\DummyPrintConnector();
+		$printer = new \Mike42\Escpos\Printer($connector);
+
+
+		try
+		{
+			// load image with escpos lib 
+			$img = \Mike42\Escpos\EscposImage::load($file, false);
+
+
+			// get image bytes to print
+			$this->printImageWithMike42EscPosPrinter($img, $printer);
+
+
+			// get data from connector				
+			return $connector->getData();
+		}
+		finally
+		{
+			$printer->close();
+		}
+	}
+	
+	
+	
+	/**
 	 * Print 2D barcode (qrcode)
 	 *
 	 * @param string $value Qrcode value
