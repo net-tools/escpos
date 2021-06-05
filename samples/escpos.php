@@ -38,8 +38,8 @@ function output($escpos)
 	
 	
 // ****** UPDATE THIS LINE WITH APPROPRIATE DRIVER *****
-$driver = new \Nettools\EscPos\Drivers\Epson_TM_P80();
-//$driver = new \Nettools\EscPos\Drivers\Hoin_HOP_E300();
+//$driver = new \Nettools\EscPos\Drivers\Epson_TM_P80();
+$driver = new \Nettools\EscPos\Drivers\Hoin_HOP_E300();
 // ****** UPDATE THIS LINE WITH APPROPRIATE DRIVER *****
 
 
