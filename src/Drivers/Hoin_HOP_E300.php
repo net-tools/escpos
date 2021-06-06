@@ -56,6 +56,8 @@ class Hoin_HOP_E300 extends EscPosCompliant {
 			throw new \Nettools\EscPos\BarcodeFormatException('QRcode version (1-19) is mandatory');
 		if ( is_null($ec) )
 			$ec = self::QRCODE_EC_L;
+        if ( is_null($size) )
+            $size = 3;
 	
 		
 		$l = strlen($value);

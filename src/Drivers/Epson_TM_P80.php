@@ -59,6 +59,8 @@ class Epson_TM_P80 extends EscPosCompliant {
 			$kind = self::QRCODE_MODEL2;
 		if ( is_null($ec) )
 			$ec = self::QRCODE_EC_L;
+        if ( is_null($size) )
+            $size = 3;
 		
 		
 		// nb : "1" char = ascii code 49 ; '0' char = ascii code 48
