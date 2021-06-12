@@ -49,7 +49,7 @@ abstract class Driver {
 	
     
 	/**
-	 * Get data bytes for an image to send to an ESCPOS printer
+	 * Get data bytes for a PNG image to send to an ESCPOS printer
 	 *
 	 * @param string $file Full path to image file
 	 * @param float $dither Quantity of dither for black/white conversion
@@ -58,6 +58,21 @@ abstract class Driver {
     public function imageFromPng($file, $dither = 0.8)
     {
         $img = imagecreatefrompng($file);
+        return $this->image(img, $dither);
+    }
+		
+    
+    
+	/**
+	 * Get data bytes for a JPEG image to send to an ESCPOS printer
+	 *
+	 * @param string $file Full path to image file
+	 * @param float $dither Quantity of dither for black/white conversion
+	 * @return string Return a string to be sent to printer
+	 */
+    public function imageFromJpeg($file, $dither = 0.8)
+    {
+        $img = imagecreatefromjpeg($file);
         return $this->image(img, $dither);
     }
 		
