@@ -58,7 +58,7 @@ abstract class Driver {
     public function imageFromPng($file, $dither = 0.8)
     {
         $img = imagecreatefrompng($file);
-        return $this->image(img, $dither);
+        return $this->image($img, $dither);
     }
 		
     
@@ -73,7 +73,7 @@ abstract class Driver {
     public function imageFromJpeg($file, $dither = 0.8)
     {
         $img = imagecreatefromjpeg($file);
-        return $this->image(img, $dither);
+        return $this->image($img, $dither);
     }
 		
     
