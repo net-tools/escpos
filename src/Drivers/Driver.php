@@ -89,8 +89,20 @@ abstract class Driver {
 		if ( imagesx($image) > $this->getPrinterResolution() )
 			$image = ImagingHelper::image_resize($image, imagesx($image), imagesy($image), $this->getPrinterResolution(), NULL);
 		
-		// get image bytes
-		return $this->getImageBytes($tmp);
+		
+		// save the new image
+		$tmp = tempnam(sys_get_temp_dir(), 'escpos-driver-bwimage');
+		imagepng($image, $tmp, 0);
+
+		try
+		{
+			// get image bytes
+			return $this->getImageBytes($tmp);
+		}
+		finally
+		{
+			unlink($tmp);
+		}
 	}
 	
 	
@@ -121,7 +133,7 @@ abstract class Driver {
 		$new_image = $converter->convertToIndexedColor($image, $palette, $dither);
 
 		// save the new image
-		$tmp = tempnam(sys_get_temp_dir(), 'escpos-helper-dither');
+		$tmp = tempnam(sys_get_temp_dir(), 'escpos-driver-dither');
 		imagepng($new_image, $tmp, 0);
 
 		try
