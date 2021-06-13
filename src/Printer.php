@@ -284,7 +284,7 @@ class Printer {
 	 */
 	public function bwimageFile($path)
 	{
-		$this->bwimage($this->_imageFromFile($path));
+		return $this->bwimage($this->_imageFromFile($path));
 	}
 	
 	
@@ -311,7 +311,7 @@ class Printer {
 	 */
 	public function imageFile($path, $dither = 0.8)
 	{
-		$this->image($this->_imageFromFile($path), $dither);
+		return $this->image($this->_imageFromFile($path), $dither);
 	}
 	
 	
