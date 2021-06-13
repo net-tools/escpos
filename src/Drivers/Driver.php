@@ -79,6 +79,23 @@ abstract class Driver {
     
     
 	/**
+	 * Get data bytes for a black & white image to send to an ESCPOS printer (no dithering will be done)
+	 *
+	 * @param resource $image
+	 * @return string Return a string to be sent to printer
+	 */
+	public function bwimage($image)
+	{
+		if ( imagesx($image) > $this->getPrinterResolution() )
+			$image = ImagingHelper::image_resize($image, imagesx($image), imagesy($image), $this->getPrinterResolution(), NULL);
+		
+		// get image bytes
+		return $this->getImageBytes($tmp);
+	}
+	
+	
+	
+	/**
 	 * Get data bytes for an image to send to an ESCPOS printer
 	 *
 	 * @param resource $image

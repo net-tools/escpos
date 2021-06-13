@@ -246,6 +246,19 @@ class EscPosHelper {
 	
 	
 	/**
+	 * Get data bytes for a black & white image to send to an ESCPOS printer (no dithering will be done)
+	 *
+	 * @param resource $image
+	 * @return string Return a string to be sent to printer
+	 */
+	public function bwimage($image)
+	{
+		return $this->driver->bwimage($image);
+	}
+	
+	
+	
+	/**
 	 * Get data bytes for an image to send to an ESCPOS printer
 	 *
 	 * @param resource $image
