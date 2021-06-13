@@ -22,7 +22,7 @@ use \Nettools\EscPos\Drivers\Driver;
 /**
  * Helper class to deal with escpos
  */
-class EscPosHelper {
+class Printer {
 		
 	const BARCODE_UPCA = 65;
 	const BARCODE_UPCE = 66;
@@ -246,6 +246,50 @@ class EscPosHelper {
 	
 	
 	/**
+	 * Load an image from a file, with appropriate function depending on file extension
+	 *
+	 * @param string $path
+	 * @return resource
+	 */
+	protected function _imageFromFile($path)
+	{
+		$ext = strrchr($path, '.');
+		
+		
+		//  choosing reading function
+		switch ( $ext )
+		{
+			case '.jpg':
+			case '.jpeg':
+				return imagecreatefromjpeg($path);
+				
+			case '.png':
+				return imagecreatefrompng($path);
+				
+			case '.gif':
+				return imagecreatefromgif($path);
+				
+			default:
+				throw new Exception('Image file format unsupported : \'$ext\'');
+		}
+	}
+	
+	
+	
+	/**
+	 * Load a black & white image from a file and output as ESCPOS
+	 *
+	 * @param string $path
+	 * @return string Return a string to be sent to printer
+	 */
+	public function bwimageFile($path)
+	{
+		$this->bwimage($this->_imageFromFile($path));
+	}
+	
+	
+	
+	/**
 	 * Get data bytes for a black & white image to send to an ESCPOS printer (no dithering will be done)
 	 *
 	 * @param resource $image
@@ -254,6 +298,20 @@ class EscPosHelper {
 	public function bwimage($image)
 	{
 		return $this->driver->bwimage($image);
+	}
+	
+	
+	
+	/**
+	 * Load an image from a file and output as ESCPOS
+	 *
+	 * @param string $path
+	 * @param float $dither Quantity of dither for black/white conversion
+	 * @return string Return a string to be sent to printer
+	 */
+	public function imageFile($path, $dither = 0.8)
+	{
+		$this->image($this->_imageFromFile($path), $dither);
 	}
 	
 	
