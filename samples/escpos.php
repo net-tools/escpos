@@ -44,7 +44,7 @@ $driver = new \Nettools\EscPos\Drivers\Hoin_HOP_E300();
 
 
 // create helper object	
-$escpos_helper = new \Nettools\EscPos\EscPosHelper($driver);
+$printer = new \Nettools\EscPos\Printer($driver);
 	
 	
 try
@@ -80,7 +80,7 @@ try
 
 
 				// dither image to black & white
-				$escpos = $escpos_helper->image($image, 0.75);
+				$escpos = $printer->image($image, 0.75);
 				output($escpos);
 			}
 			finally
@@ -188,7 +188,7 @@ try
 	// output a barcode
 	else if ( isset($_REQUEST['barcode']) )
 	{
-		$escpos = $escpos_helper->barcode($_REQUEST['value'], (int)$_REQUEST['barcode']);
+		$escpos = $printer->barcode($_REQUEST['value'], (int)$_REQUEST['barcode']);
 
 		// output
 		output($escpos);
@@ -200,7 +200,7 @@ try
 	// output a qrcode
 	else if ( isset($_REQUEST['qrcode']) )
 	{
-		$escpos = $escpos_helper->qrcode($_REQUEST['qrcode'], (int)($_REQUEST['version']), (int)($_REQUEST['size']), (int)($_REQUEST['ec']));
+		$escpos = $printer->qrcode($_REQUEST['qrcode'], (int)($_REQUEST['version']), (int)($_REQUEST['size']), (int)($_REQUEST['ec']));
 
 		// output
 		output($escpos);
