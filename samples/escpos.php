@@ -208,7 +208,7 @@ try
 
 	
 	// output
-	print_r("<div style=\"padding:5px; background-color:lightgray;\">" . $html . "</div>");
+	//print_r("<div style=\"padding:5px; background-color:lightgray;\">" . $html . "</div>");
 }
 
 
