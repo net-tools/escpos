@@ -49,7 +49,7 @@ $printer = new \Nettools\EscPos\Printer($driver);
 	
 try
 {
-	if ( $f = $_FILES['image'] )
+	if ( isset($_FILES['image']) && ($f = $_FILES['image']) )
 	{
 		if ( $f['error'] == UPLOAD_ERR_OK )
 		{
