@@ -93,7 +93,7 @@ try
 
 
 	// output a char map
-	else if ( isset($_REQUEST['charmap']) )
+	else if ( !empty($_REQUEST['charmap']) )
 	{
 		function compactCharTable($printer, $start = 4, $header = false)
 		{
@@ -186,7 +186,7 @@ try
 
 
 	// output a barcode
-	else if ( isset($_REQUEST['barcode']) )
+	else if ( !empty($_REQUEST['barcode']) )
 	{
 		$escpos = $printer->barcode($_REQUEST['value'], (int)$_REQUEST['barcode']);
 
@@ -198,7 +198,7 @@ try
 
 
 	// output a qrcode
-	else if ( isset($_REQUEST['qrcode']) )
+	else if ( !empty($_REQUEST['qrcode']) )
 	{
 		$escpos = $printer->qrcode($_REQUEST['qrcode'], (int)($_REQUEST['version']), (int)($_REQUEST['size']), (int)($_REQUEST['ec']));
 
