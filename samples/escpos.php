@@ -280,6 +280,6 @@ catch (Throwable $e)
 	<label>Value :<input type="text" name="qrcode"></label><br>
 	<label>Version/model :<input type="text" name="version" placeholder="1-19 (Hoin) or 49-50 (Epson Model 1 or 2)"></label><br>
 	<label>Size : <input type="text" name="size" value="3"></label><br>
-	<label>Error correction : <input type="text" name="ec" value="" placeholder="1-4 (Hoin) or 48-51 (Epson)"></label><br>
+	<label>Error correction : <input type="text" name="ec" value="" placeholder="0-3 (Hoin) or 48-51 (Epson)"></label><br>
 	<input type="submit" name="submit" value="Print qrcode">
 </form>

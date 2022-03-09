@@ -20,10 +20,10 @@ namespace Nettools\EscPos\Drivers;
  */
 class Hoin_HOP_E300 extends EscPosCompliant {
 	
-	const QRCODE_EC_L = 1;
-	const QRCODE_EC_M = 2;
-	const QRCODE_EC_Q = 3;
-	const QRCODE_EC_H = 4;
+	const QRCODE_EC_L = 0;
+	const QRCODE_EC_M = 1;
+	const QRCODE_EC_Q = 2;
+	const QRCODE_EC_H = 3;
 	
 	
 	
