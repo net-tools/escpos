@@ -17,9 +17,23 @@ use Mike42\Escpos\CapabilityProfile;
 
 
 
-function output($escpos)
+function output($escpos, $hex = false)
 {
 	$html = "<a href=\"rawbt:base64," . base64_encode($escpos) . "\">Send to ESC/POS printer</a><br>";
+	
+
+	if ( $hex )
+	{
+		$l = strlen($escpos);
+		for ( $i = 0 ; $i < $l ; $i++ )
+		{
+			echo str_pad(dechex(ord(substr($escpos, $i, 1))), 2, '0', STR_PAD_LEFT);
+			echo " ";
+		}
+		
+		echo "<br>";
+	}
+	
 	
 	echo $html;
 }
@@ -198,12 +212,21 @@ try
 
 
 	// output a qrcode
-	else if ( !empty($_REQUEST['qrcode']) )
+	else if ( !empty($_REQUEST['qrcode']) || !empty($_REQUEST['qrselect']) )
 	{
-		$escpos = $printer->qrcode($_REQUEST['qrcode'], (int)($_REQUEST['version']), (int)($_REQUEST['size']), (int)($_REQUEST['ec']));
+		if ( $_REQUEST['qrcode'] )
+			$txt = $_REQUEST['qrcode'];
+		else
+		{
+			$nb = $_REQUEST['qrselect'];
+			$txt = str_pad("", $nb, '0123456789');
+		}
+			
+			
+		$escpos = $printer->qrcode($txt, (int)($_REQUEST['version']), (int)($_REQUEST['size']), (int)($_REQUEST['ec']));
 
-		// output
-		output($escpos);
+		// output + hex view
+		output($escpos, true);
 	}
 
 	
@@ -277,9 +300,31 @@ catch (Throwable $e)
 
 	
 <form method="post" action="escpos.php">
-	<label>Value :<input type="text" name="qrcode"></label><br>
-	<label>Version/model :<input type="text" name="version" placeholder="1-19 (Hoin) or 49-50 (Epson Model 1 or 2)"></label><br>
-	<label>Size : <input type="text" name="size" value="3"></label><br>
-	<label>Error correction : <input type="text" name="ec" value="" placeholder="0-3 (Hoin) or 48-51 (Epson)"></label><br>
+	<label>Value :<input type="text" name="qrcode" value="<?php echo isset($_REQUEST['qrcode']) ? $_REQUEST['qrcode']:''; ?>"></label><br>
+	<label>or select content : 
+		<select name="qrselect" value="<?php echo isset($_REQUEST['qrselect']) ? $_REQUEST['qrselect']:''; ?>">
+			<option></option>
+			<option value="15"  <?php echo (isset($_REQUEST['qrselect']) && $_REQUEST['qrselect'] == '15') ? "selected":""; ?> >15 bytes</option>
+			<option value="30"  <?php echo (isset($_REQUEST['qrselect']) && $_REQUEST['qrselect'] == '30') ? "selected":""; ?> >30 bytes</option>
+			<option value="50"  <?php echo (isset($_REQUEST['qrselect']) && $_REQUEST['qrselect'] == '50') ? "selected":""; ?> >50 bytes</option>
+			<option value="75"  <?php echo (isset($_REQUEST['qrselect']) && $_REQUEST['qrselect'] == '75') ? "selected":""; ?> >75 bytes</option>
+			<option value="100" <?php echo (isset($_REQUEST['qrselect']) && $_REQUEST['qrselect'] == '100') ? "selected":""; ?>>100 bytes</option>
+			<option value="130" <?php echo (isset($_REQUEST['qrselect']) && $_REQUEST['qrselect'] == '130') ? "selected":""; ?>>130 bytes</option>
+			<option value="150" <?php echo (isset($_REQUEST['qrselect']) && $_REQUEST['qrselect'] == '150') ? "selected":""; ?>>150 bytes</option>
+			<option value="190" <?php echo (isset($_REQUEST['qrselect']) && $_REQUEST['qrselect'] == '190') ? "selected":""; ?>>190 bytes</option>
+			<option value="225" <?php echo (isset($_REQUEST['qrselect']) && $_REQUEST['qrselect'] == '225') ? "selected":""; ?>>225 bytes</option>
+			<option value="270" <?php echo (isset($_REQUEST['qrselect']) && $_REQUEST['qrselect'] == '270') ? "selected":""; ?>>270 bytes</option>
+			<option value="320" <?php echo (isset($_REQUEST['qrselect']) && $_REQUEST['qrselect'] == '320') ? "selected":""; ?>>320 bytes</option>
+			<option value="365" <?php echo (isset($_REQUEST['qrselect']) && $_REQUEST['qrselect'] == '365') ? "selected":""; ?>>365 bytes</option>
+			<option value="420" <?php echo (isset($_REQUEST['qrselect']) && $_REQUEST['qrselect'] == '420') ? "selected":""; ?>>420 bytes</option>
+			<option value="455" <?php echo (isset($_REQUEST['qrselect']) && $_REQUEST['qrselect'] == '455') ? "selected":""; ?>>455 bytes</option>
+			<option value="585" <?php echo (isset($_REQUEST['qrselect']) && $_REQUEST['qrselect'] == '585') ? "selected":""; ?>>585 bytes</option>
+			<option value="640" <?php echo (isset($_REQUEST['qrselect']) && $_REQUEST['qrselect'] == '640') ? "selected":""; ?>>640 bytes</option>
+			<option value="715" <?php echo (isset($_REQUEST['qrselect']) && $_REQUEST['qrselect'] == '715') ? "selected":""; ?>>715 bytes</option>
+			<option value="790" <?php echo (isset($_REQUEST['qrselect']) && $_REQUEST['qrselect'] == '790') ? "selected":""; ?>>790 bytes</option>
+		</select></label><br>
+	<label>Version/model :<input type="text" name="version" placeholder="1-19 (Hoin) or 49-50 (Epson Model 1 or 2)" value="<?php echo isset($_REQUEST['version'])?$_REQUEST['version']:''; ?>"></label><br>
+	<label>Size : <input type="text" name="size" value="<?php echo isset($_REQUEST['size'])?$_REQUEST['size']:'3'; ?>" ></label><br>
+	<label>Error correction : <input type="text" name="ec" value="<?php echo isset($_REQUEST['ec'])?$_REQUEST['ec']:''; ?>" placeholder="0-3 (Hoin) or 48-51 (Epson)"></label><br>
 	<input type="submit" name="submit" value="Print qrcode">
 </form>
