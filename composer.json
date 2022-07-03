@@ -7,7 +7,7 @@
 	
 	"require" : {
 		"net-tools/gd-indexed-color-converter" : "^1.0.0",
-		"mike42/escpos-php"	: "^3.0.0",
+		"mike42/escpos-php"	: "^4.0.0",
 		"net-tools/core" : "^1.0.0"
 	},
 	
